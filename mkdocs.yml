@@ -7,7 +7,7 @@ markdown_extensions:
       emoji_generator: !!python/name:materialx.emoji.to_svg
       options:
         custom_icons:
-          - overrides/.icons
+          - _overrides/.icons
   - pymdownx.highlight
   - pymdownx.inlinehilite
   - pymdownx.superfences:
@@ -32,11 +32,10 @@ site_description: Airspace documentation and reference.
 site_name: Airspace Docs
 theme:
   # https://squidfunk.github.io/mkdocs-material/
-  name: material
+  custom_dir: overrides
   favicon: _static/img/airspace_favicon.png
   icon:
     repo: fontawesome/brands/github
-#  logo: _static/img/airspace_logo.png
   features:
     - attr_list
     - content.code.annotate
@@ -49,6 +48,10 @@ theme:
     - search.share
     - search.suggest
     - toc.follow
+  locale: en
+  #logo: _static/img/airspace_logo.png
+  logo: _static/img/globe.svg
+  name: material
   palette:
     - scheme: slate
 #      primary: orange
@@ -71,6 +74,7 @@ plugins:
       minify_css: true
       htmlmin_opts:
           remove_comments: true
+  - with-pdf
   - redirects:
       redirect_maps:
           'index.md': 'documentation/index.md'

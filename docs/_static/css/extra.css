@@ -3,3 +3,12 @@
   --md-primary-fg-color--light: blue;
   --md-primary-fg-color--dark:  green;
 }
+
+.md-header__title {
+    margin-left: 0 !important;
+}
+
+.md-icon {
+    display: none !important;
+
+}
