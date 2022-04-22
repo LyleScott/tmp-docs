@@ -20,7 +20,6 @@ nav:
     - Hi From Airspace!: documentation/index.md
     - Onboarding:
       - documentation/onboarding/getting_started.md
-      - documentation/onboarding/how_airspace_works.md
     - Support:
       - documentation/support/feature_requests.md
       - documentation/support/help.md
@@ -28,6 +27,7 @@ nav:
     - Technical:
       - documentation/technical/authentication.md
       - 'CDN Propagation': documentation/technical/cdn_propagation.md
+      - 'CDN Support': documentation/technical/cdn_support.md
       - documentation/technical/purging.md
   - Reference: reference.md
   - Releases: releases.md
