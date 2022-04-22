@@ -23,7 +23,12 @@ nav:
       - documentation/onboarding/how_airspace_works.md
     - Support:
       - documentation/support/feature_requests.md
+      - documentation/support/help.md
       - documentation/support/report_an_issue.md
+    - Technical:
+      - documentation/technical/authentication.md
+      - 'CDN Propagation': documentation/technical/cdn_propagation.md
+      - documentation/technical/purging.md
   - Reference: reference.md
   - Releases: releases.md
 repo_name: lylescott/airspace-docs
@@ -50,7 +55,7 @@ theme:
     - toc.follow
   locale: en
   #logo: _static/img/airspace_logo.png
-  logo: _static/img/globe.svg
+  logo: _static/img/rocket.svg
   name: material
   palette:
     - scheme: slate

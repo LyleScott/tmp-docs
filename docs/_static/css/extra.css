@@ -8,6 +8,11 @@
     margin-left: 0 !important;
 }
 
+.md-footer {
+    display: none !important;
+}
+
+
 .md-icon {
     display: none !important;
 
