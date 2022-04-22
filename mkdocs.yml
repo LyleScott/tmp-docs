@@ -1,0 +1,77 @@
+extra_css:
+  - _static/css/extra.css
+markdown_extensions:
+  - attr_list
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+      options:
+        custom_icons:
+          - overrides/.icons
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+nav:
+  - Documentation:
+    - Hi From Airspace!: documentation/index.md
+    - Onboarding:
+      - documentation/onboarding/getting_started.md
+      - documentation/onboarding/how_airspace_works.md
+    - Support:
+      - documentation/support/feature_requests.md
+      - documentation/support/report_an_issue.md
+  - Reference: reference.md
+  - Releases: releases.md
+repo_name: lylescott/airspace-docs
+repo_url: https://github.com/LyleScott/airspace-docs
+site_description: Airspace documentation and reference.
+site_name: Airspace Docs
+theme:
+  # https://squidfunk.github.io/mkdocs-material/
+  name: material
+  favicon: _static/img/airspace_favicon.png
+  icon:
+    repo: fontawesome/brands/github
+#  logo: _static/img/airspace_logo.png
+  features:
+    - attr_list
+    - content.code.annotate
+    - navigation.indexes
+    - navigation.sections
+    - navigation.tabs
+    - navigation.top
+    - navigation.tracking
+    - search.highlight
+    - search.share
+    - search.suggest
+    - toc.follow
+  palette:
+    - scheme: slate
+#      primary: orange
+#      accent: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to dark mode
+    - scheme: default
+#      primary: orange
+#      accent: red
+      toggle:
+        icon: material/weather-night
+        name: Switch to light mode
+plugins:
+  - git-revision-date-localized:
+        type: date
+  - minify:
+      minify_html: true
+      minify_js: true
+      minify_css: true
+      htmlmin_opts:
+          remove_comments: true
+  - redirects:
+      redirect_maps:
+          'index.md': 'documentation/index.md'
+  - search
