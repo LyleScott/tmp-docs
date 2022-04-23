@@ -1,6 +1,7 @@
 extra_css:
   - _static/css/extra.css
 markdown_extensions:
+  - admonition
   - attr_list
   - pymdownx.emoji:
       emoji_index: !!python/name:materialx.emoji.twemoji
@@ -8,6 +9,7 @@ markdown_extensions:
       options:
         custom_icons:
           - _overrides/.icons
+  - pymdownx.details
   - pymdownx.highlight
   - pymdownx.inlinehilite
   - pymdownx.superfences:
@@ -17,20 +19,25 @@ markdown_extensions:
           format: !!python/name:pymdownx.superfences.fence_code_format
 nav:
   - Documentation:
-    - Hi From Airspace!: documentation/index.md
+    - 'Hi From Airspace!': documentation/index.md
     - Onboarding:
       - documentation/onboarding/getting_started.md
     - Support:
       - documentation/support/feature_requests.md
-      - documentation/support/help.md
+      - documentation/support/get_help.md
       - documentation/support/report_an_issue.md
     - Technical:
       - documentation/technical/authentication.md
       - 'CDN Propagation': documentation/technical/cdn_propagation.md
       - 'CDN Support': documentation/technical/cdn_support.md
       - documentation/technical/purging.md
-  - Reference: reference.md
-  - Releases: releases.md
+  - api_reference.md
+  - Releases:
+    - releases/3_4.md
+    - releases/3_3.md
+    - releases/3_2.md
+    - releases/3_1.md
+    - releases/3_0.md
 repo_name: lylescott/airspace-docs
 repo_url: https://github.com/LyleScott/airspace-docs
 site_description: Airspace documentation and reference.
@@ -54,19 +61,14 @@ theme:
     - search.suggest
     - toc.follow
   locale: en
-  #logo: _static/img/airspace_logo.png
   logo: _static/img/rocket.svg
   name: material
   palette:
     - scheme: slate
-#      primary: orange
-#      accent: indigo
       toggle:
         icon: material/weather-sunny
         name: Switch to dark mode
     - scheme: default
-#      primary: orange
-#      accent: red
       toggle:
         icon: material/weather-night
         name: Switch to light mode
@@ -79,7 +81,7 @@ plugins:
       minify_css: true
       htmlmin_opts:
           remove_comments: true
-  - with-pdf
+  #- with-pdf
   - redirects:
       redirect_maps:
           'index.md': 'documentation/index.md'
