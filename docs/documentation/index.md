@@ -1,4 +1,4 @@
-# Hi From Airspace! :rocket:
+# Hi From Airspace!
 
 ![Airspace Logo](../_static/img/airspace_logo.png){: style="height:160px; width:170px; float:right; padding-left: 10px; padding-bottom: 5px;"}
 
@@ -19,10 +19,9 @@ Airspace also integrates into tooling to extend your CDN's feature set. For exam
 you may configure the entire Airspace property to also turn on Visor (another VTG VDE
 product) to capture and analyze a User configurable sample rate of your CDN logs so
 that you may query and alert on quality and delivery metrics from all CDNs through a
-single pane. Extend this even futher by configuring the Airspace property with
+single pane. Extend this even further by configuring the Airspace property with
 [Touchstream](https://www.touchstream.media/) and other 3rd party integrations.
 
 The idea is simple; tell Airspace about your business case, define some basic
 configuration parameters, and let Airspace take care of all the little configuration
 details in all the needed 3rd part system.
-

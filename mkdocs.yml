@@ -21,6 +21,8 @@ nav:
   - Documentation:
     - 'Hi From Airspace!': documentation/index.md
     - Onboarding:
+      - 'What is Airspace': /documentation/
+      - documentation/onboarding/cdn_support.md
       - documentation/onboarding/getting_started.md
     - Support:
       - documentation/support/feature_requests.md
@@ -28,8 +30,7 @@ nav:
       - documentation/support/report_an_issue.md
     - Technical:
       - documentation/technical/authentication.md
-      - 'CDN Propagation': documentation/technical/cdn_propagation.md
-      - 'CDN Support': documentation/technical/cdn_support.md
+      - documentation/technical/cdn_propagation.md
       - documentation/technical/purging.md
   - api_reference.md
   - Releases:
@@ -44,7 +45,7 @@ site_description: Airspace documentation and reference.
 site_name: Airspace Docs
 theme:
   # https://squidfunk.github.io/mkdocs-material/
-  custom_dir: overrides
+#  custom_dir: overrides
   favicon: _static/img/airspace_favicon.png
   icon:
     repo: fontawesome/brands/github
@@ -64,17 +65,25 @@ theme:
   logo: _static/img/rocket.svg
   name: material
   palette:
-    - scheme: slate
-      toggle:
-        icon: material/weather-sunny
-        name: Switch to dark mode
+#    - scheme: default
+#      toggle:
+#        icon: material/toggle-switch
+#        name: Switch to dark mode
+#    - scheme: slate
+#      toggle:
+#        icon: material/toggle-switch-off-outline
+#        name: Switch to light mode
     - scheme: default
       toggle:
-        icon: material/weather-night
+        icon: material/toggle-switch-off-outline
         name: Switch to light mode
+    - scheme: slate
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to dark mode
 plugins:
   - git-revision-date-localized:
-        type: date
+      type: date
   - minify:
       minify_html: true
       minify_js: true
