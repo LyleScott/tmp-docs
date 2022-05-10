@@ -1,0 +1,913 @@
+openapi: 3.0.3
+info:
+  version: 1.0.0
+  title: Airspace API
+  x-logo:
+    url: >-
+      https://camo.githubusercontent.com/b0c3504953b38611e4256f081275c7a23b56981e62942a99f0f906db69e801f9/68747470733a2f2f692e6962622e636f2f6e6e575133624e2f41495253504143452d4f52414e47452e706e67
+    href: 'https://cbsinteractive.github.io/airspace/'
+  description: CDN Video Management API
+  contact:
+    name: Video Technology Group - Video Delivery and Experience
+    email: vde@cbsinteractive.com
+    url: 'https://cbsinteractive.github.io/airspace/'
+  license:
+    name: Proprietary
+tags:
+  - name: Organizations
+    description: 'Organizations are parent entities for Airspace properties. EG: CBSN'
+  - name: Miscellaneous
+    description: 'Miscellaneous operations.'
+  - name: Purge
+    description: 'Purge operations.'
+  - name: Configurations
+    description: 'Configurations are Airspace properties. Identified by and Airspace config_id.'
+paths:
+  /healthcheck:
+    get:
+      description: Service health check
+      operationId: healthCheck
+      x-ts-operationId: healthCheck
+      parameters:
+        - $ref: '#/components/parameters/HealthcheckWorker'
+      tags:
+        - Miscellaneous
+      responses:
+        '200':
+          description: Service health status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Healthcheck'
+
+  '/purge/{config_id}':
+    parameters:
+      - $ref: '#/components/parameters/ConfigIdPathParam'
+    servers:
+      - url: https://airspace-purge.cbsivideo.com/v1
+        description: Production Purging Server
+    post:
+      summary: Create A Purge Operation
+      description: Creates a purge operation for an Airspace property.
+      operationId: createPurge
+      x-ts-operationId: createPurge
+      tags:
+        - Purge
+      security:
+        - authheader:
+          - api
+      requestBody:
+        required: true
+        description: The purge details.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PurgePost'
+      responses:
+        '201':
+          description: Purge operation created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Purge'
+        '404':
+          description: Config not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '400':
+          description: Invalid request body.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '500':
+          description: Failed to create purge.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+
+  '/config/{config_id}/dictionary/{dictionary_name}':
+    parameters:
+      - $ref: '#/components/parameters/ConfigIdPathParam'
+      - $ref: '#/components/parameters/DictionaryNamePathParam'
+    get:
+      summary: Return an edge dictionary.
+      description: Return a Fastly edge dictionary.
+      operationId: getEdgeDictionary
+      x-ts-operationId: getEdgeDictionary
+      tags:
+        - EdgeDictionary
+      security:
+        - authheader:
+            - api
+      responses:
+        '200':
+          description: Edge dictionary retrieved.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  key:
+                    type: string
+                  value:
+                    type: string
+        '404':
+          description: Config not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '400':
+          description: Invalid request body.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '500':
+          description: Failed to update dictionary.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+    delete:
+      summary: Delete a key in an edge dictionary.
+      description: Delete a key in the configuration's Fastly edge dictionary.
+      operationId: deleteEdgeDictionaryItem
+      x-ts-operationId: deleteEdgeDictionaryItem
+      tags:
+        - EdgeDictionary
+      security:
+        - authheader:
+            - api
+      requestBody:
+        required: true
+        description: The keys and values to delete.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                key:
+                  type: string
+                value:
+                  type: string
+      responses:
+        '200':
+          description: Edge dictionary updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '404':
+          description: Config not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '400':
+          description: Invalid request body.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '500':
+          description: Failed to update dictionary.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+    put:
+      summary: Upsert a key into an edge dictionary.
+      description: Upserts a key into the configuration's Fastly edge dictionary.
+      operationId: upsertEdgeDictionaryItem
+      x-ts-operationId: upsertEdgeDictionaryItem
+      tags:
+        - EdgeDictionary
+      security:
+        - authheader:
+            - api
+      requestBody:
+        required: true
+        description: The keys and values to upsert.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                key:
+                  type: string
+                value:
+                  type: string
+      responses:
+        '200':
+          description: Edge dictionary updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '404':
+          description: Config not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '400':
+          description: Invalid request body.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '500':
+          description: Failed to update dictionary.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+
+  /organizations:
+    get:
+      summary: Retrieve all Airspace organizations
+      description: Returns a list of all organizations that are present in Airspace.
+      operationId: getAllOrganizations
+      x-ts-operationId: getAllOrganizations
+      security:
+        - authheader:
+            - 'api:read'
+      tags:
+        - Organizations
+      responses:
+        '200':
+          description: List of organizations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Organization'
+    post:
+      summary: Create an Organization
+      description: Creates an organizations for use in Airspace.
+      operationId: createOrganization
+      x-ts-operationId: createOrganization
+      security:
+        - authheader:
+            - api
+      requestBody:
+        required: true
+        description: The organization details.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrganizationPost'
+      tags:
+        - Organizations
+      responses:
+        '201':
+          description: Created a new organization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+        '422':
+          description: Validation error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '400':
+          description: Invalid request body.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '500':
+          description: Failed to save Organization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+
+  '/organizations/{organization_id}':
+    parameters:
+      - $ref: '#/components/parameters/OrgIdPathParam'
+    get:
+      summary: Get an Organization
+      description: Returns a single organization.
+      operationId: getOrganization
+      x-ts-operationId: getOrganization
+      security:
+        - authheader:
+            - 'api:read'
+      tags:
+        - Organizations
+      responses:
+        '200':
+          description: The requested organization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+        '404':
+          description: Organization not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+
+  '/organizations/{organization_id}/configs':
+    parameters:
+      - $ref: '#/components/parameters/OrgIdPathParam'
+    get:
+      summary: Get a list of configs per Organization
+      description: Returns a list of configs
+      operationId: getOrganizationConfigs
+      x-ts-operationId: getOrganizationConfigs
+      security:
+        - authheader:
+            - 'api:read'
+      tags:
+        - Configurations
+      responses:
+        '200':
+          description: List of configs.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Config'
+    post:
+      summary: Create a new Config
+      description: Create a new CDN configuration within this Organization.
+      operationId: createConfig
+      x-ts-operationId: createConfig
+      security:
+        - authheader:
+            - 'api'
+      requestBody:
+        required: true
+        description: The config details.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfigPost'
+      tags:
+        - Configurations
+      responses:
+        '201':
+          description: Config details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Config'
+
+  '/organizations/{organization_id}/configs/{config_id}':
+    parameters:
+      - $ref: '#/components/parameters/OrgIdPathParam'
+      - $ref: '#/components/parameters/ConfigIdPathParam'
+    patch:
+      summary: Patch an existing Config
+      description: Patch an existing configuration within this Organization.
+      operationId: patchConfig
+      x-ts-operationId: patchConfig
+      security:
+        - authheader:
+            - 'api'
+      requestBody:
+        required: true
+        description: The edited attributes.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfigPatch'
+      tags:
+        - Configurations
+      responses:
+        '201':
+          description: Config details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Config'
+    get:
+      summary: Get a single config
+      operationId: getConfig
+      x-ts-operationId: getConfig
+      security:
+        - authheader:
+          - 'api:read'
+      tags:
+        - Configurations
+      responses:
+        '200':
+          description: Config details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Config'
+        '404':
+          description: Config or Organization not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+components:
+  parameters:
+    HealthcheckWorker:
+      name: worker
+      in: query
+      description: Additionally healthcheck a worker
+      required: false
+      allowEmptyValue: false
+      schema:
+        type: boolean
+    OrgIdPathParam:
+      name: organization_id
+      in: path
+      description: The organization id.
+      required: true
+      allowEmptyValue: false
+      schema:
+        type: string
+    DictionaryNamePathParam:
+      name: dictionary_name
+      in: path
+      description: dictionary_name.
+      required: true
+      allowEmptyValue: false
+      schema:
+        type: string
+        enum:
+          - proxy_deny_list
+          - primary_region_override
+          - ip_allow_list
+          - asn_deny_list
+          - mediastore_stream_basenames
+    ConfigIdPathParam:
+      name: config_id
+      in: path
+      description: The configuration id.
+      required: true
+      allowEmptyValue: false
+      schema:
+        type: string
+  schemas:
+    HealthcheckWorker:
+      type: object
+      properties:
+        message:
+          type: string
+        healthy:
+          type: boolean
+    Purge:
+      type: object
+      properties:
+        status:
+          type: string
+        job_ids:
+          type: array
+          items:
+            type: string
+    ConfigDomain:
+      type: object
+      properties:
+        hostname:
+          type: string
+        shield:
+          type: boolean
+    ConfigFlags:
+      type: object
+      properties:
+        live_streams:
+          type: boolean
+          description: |
+            `true` means that the `ttl_manifests` option will be enforced,
+            `false` means that `ttl_default` will apply.
+        ttl_default:
+          type: integer
+          description: Default TTL.
+        ttl_manifests:
+          type: integer
+          description: TTL used for manifests when `live_streams` is `true`.
+        ttl_errors:
+          type: integer
+          description: TTL used for errors.
+        gzip:
+          type: boolean
+          description: |
+            `true` means file compression is enabled,
+            `false` means file compression is disabled.
+        block_proxy:
+          type: boolean
+          description: |
+            `true` means that the `proxies` option will receive a 403,
+            `false` means that `proxies` will be allowed.
+            Only relevant for fastly and akamai.
+        honor_cache_control:
+          type: boolean
+          description: |
+            `true` means that TTLs will be determined by the Cache-Control header supplied by the origin.
+    AccessControl:
+      type: object
+      required:
+        - enabled
+        - type
+      properties:
+        type:
+          type: string
+          enum:
+            - api
+            - token
+        enabled:
+          type: boolean
+        jwt_token_id:
+          type: string
+        workflow:
+          type: string
+        hostname:
+          type: object
+          description: "Required for the API type. The hostname for API pre-flight requests."
+          required:
+            - path
+            - method
+            - healthcheck
+            - fqdn
+          properties:
+            fqdn:
+              type: string
+            path:
+              type: string
+            method:
+              type: string
+              enum:
+                - POST
+                - GET
+                - PUT
+            validate_range_requests:
+              type: boolean
+              description: "Bypass the API pre-flight for ranged requests."
+            health_check:
+              type: object
+              required:
+                - path
+                - method
+                - status_code
+                - enabled
+              properties:
+                enabled:
+                  type: boolean
+                  description: "If false, the configuration will fail open when the API endpoint fails health checks"
+                path:
+                  type: string
+                method:
+                  type: string
+                  enum:
+                    - POST
+                    - GET
+                    - PUT
+                status_code:
+                  type: integer
+                  enum:
+                    - 200
+                    - 201
+                    - 202
+                    - 204
+    ConfigVisor:
+      type: object
+      properties:
+        environment:
+          type: string
+        business_unit:
+          type: string
+        role:
+          type: string
+        workflow:
+          type: string
+        rtl:
+          type: object
+          required:
+            - enabled
+          properties:
+            enabled:
+              type: boolean
+            logging_sample_rate:
+              $ref: '#/components/schemas/ConfigLoggingSampleRate'
+        streams:
+          type: array
+          items:
+            type: object
+            required:
+              - stream_name
+              - path_prefix
+            properties:
+              path_prefix:
+                type: string
+              stream_name:
+                type: string
+              touchstream:
+                type: object
+                required:
+                  - enabled
+                  - integrations
+                properties:
+                  enabled:
+                    type: boolean
+                  integrations:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - manifest_path
+                        - stream_title
+                      properties:
+                        manifest_path:
+                          type: string
+                        stream_title:
+                          type: string
+    ConfigActiveRegions:
+      description: List that describes the intended audience.
+      type: array
+      items:
+        type: string
+        enum:
+          - LATAM
+          - NA
+          - EU
+          - APAC
+    ConfigLoggingSampleRate:
+      description: An integer in the range 0-100 that specifies the logging sample rate.
+      type: integer
+      enum:
+        - 0
+        - 25
+        - 50
+        - 75
+        - 100
+    ConfigCDNs:
+      description: List of CDNs used for this config.
+      type: array
+      items:
+        type: string
+        enum:
+          - fastly
+          - edgecast
+          - cloudfront
+          - akamai
+    ConfigPatch:
+      type: object
+      properties:
+        access_control:
+          $ref: '#/components/schemas/AccessControl'
+        name:
+          description: Human readable name for this config.
+          type: string
+        cdns:
+          $ref: '#/components/schemas/ConfigCDNs'
+        active_regions:
+          $ref: '#/components/schemas/ConfigActiveRegions'
+        origin:
+          description: List of origin domains.
+          type: array
+          items:
+            type: string
+        origin_auth_header:
+          description: Authentication header, if required by origin servers.
+          type: string
+        geo:
+          type: array
+          items:
+            $ref: '#/components/schemas/GeoConfig'
+        domains:
+          description: List of optional domains applied to property.
+          type: array
+          items:
+            $ref: '#/components/schemas/ConfigDomain'
+        tags:
+          type: object
+          additionalProperties:
+            type: string
+        visor:
+          $ref: '#/components/schemas/ConfigVisor'
+        whitelist_ips:
+          $ref: '#/components/schemas/ConfigWhitelistIPs'
+        flags:
+          $ref: '#/components/schemas/ConfigFlags'
+    ConfigPost:
+      type: object
+      required:
+        - name
+        - cdns
+        - origin
+      properties:
+        access_control:
+          $ref: '#/components/schemas/AccessControl'
+        name:
+          description: Human readable name for this config.
+          type: string
+        cdns:
+          $ref: '#/components/schemas/ConfigCDNs'
+        active_regions:
+          $ref: '#/components/schemas/ConfigActiveRegions'
+        origin:
+          description: List of origin domains.
+          type: array
+          items:
+            type: string
+        origin_auth_header:
+          description: Authentication header, if required by origin servers.
+          type: string
+        geo:
+          type: array
+          items:
+            $ref: '#/components/schemas/GeoConfig'
+        domains:
+          description: List of optional domains applied to property.
+          type: array
+          items:
+            $ref: '#/components/schemas/ConfigDomain'
+          externalDocs:
+            description: See field docs for more info.
+            url: http://google.com
+        tags:
+          type: object
+          additionalProperties:
+            type: string
+        visor:
+          $ref: '#/components/schemas/ConfigVisor'
+        whitelist_ips:
+          $ref: '#/components/schemas/ConfigWhitelistIPs'
+        flags:
+          $ref: '#/components/schemas/ConfigFlags'
+    ConfigWhitelistIPs:
+      description: List of IP addresses to be let past geo restrictions.
+      type: array
+      items:
+        type: string
+    Config:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/ConfigPost'
+        - required:
+          - id
+          - name
+          - cdns
+          - created_at
+          - updated_at
+          - organization_id
+          - playback_hostname
+          - snapshot_state
+          - snapshot_version
+        - type: object
+          properties:
+            id:
+              description: Unique identifier.
+              type: string
+            organization_id:
+              description: ID of the Organization this Config belongs to.
+              type: string
+            created_at:
+              type: string
+              format: date-time
+            updated_at:
+              type: string
+              format: date-time
+            dns:
+              type: array
+              items:
+                $ref: '#/components/schemas/DNSConfig'
+            playback_hostname:
+              type: string
+              format: uri
+            snapshot_activated_at:
+              type: string
+              format: date-time
+            snapshot_state:
+              type: string
+            snapshot_version:
+              type: integer
+    DNSConfig:
+      type: object
+      required:
+        - pointer
+        - zone
+        - name
+      properties:
+        pointer:
+          type: string
+        zone:
+          type: string
+        name:
+          type: string
+    GeoConfig:
+      type: object
+      required:
+        - type
+        - countries
+      properties:
+        type:
+          type: string
+        countries:
+          type: array
+          items:
+            type: string
+        prefix:
+          type: string
+    OrganizationPost:
+      type: object
+      required:
+        - name
+        - owner
+      properties:
+        id:
+          description: Organization unique identifier.
+          type: string
+          pattern: '^[a-zA-Z0-9_-]+$'
+        logo_url:
+          description: Organization logo URL.
+          type: string
+          format: uri
+        name:
+          description: Organization name.
+          type: string
+        owner:
+          description: Identification of primary point of contact for this Organization. Usually an email address.
+          type: string
+    Organization:
+      allOf:
+        - $ref: '#/components/schemas/OrganizationPost'
+        - type: object
+          required:
+            - id
+            - name
+            - owner
+            - logo_url
+    Healthcheck:
+      type: object
+      required:
+        - status
+        - commit
+      properties:
+        status:
+          type: string
+        commit:
+          type: string
+        worker:
+          $ref: '#/components/schemas/HealthcheckWorker'
+    PurgePost:
+      type: object
+      required:
+        - purge_type
+      properties:
+        purge_type:
+          description: The type of purge requested.
+          type: string
+          enum:
+            - all
+            - path
+        key_list:
+          description: URLs to purge if purge_type not "all".
+          type: array
+          items:
+            type: string
+            format: uri
+    Message:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+    ValidationError:
+      type: object
+      required:
+        - message
+      example:
+        message: Missing or invalid fields
+        errors:
+          logo_url:
+            - Not a valid URL.
+          id:
+            - String must contain only letters, numbers, _ or -.
+      properties:
+        message:
+          type: string
+        errors:
+          description: Errors associated with specific fields.
+          type: object
+          additionalProperties:
+            type: array
+            description: List of errors associated with this field.
+            items:
+              type: string
+  securitySchemes:
+    authheader:
+      type: apiKey
+      in: header
+      name: Authorization
+servers:
+  - url: https://airspace.cbsivideo.com/v1
+    description: Production Server
